@@ -160,7 +160,7 @@ export default function SignUpForm() {
             )}
           />
         </div>
-        <Button type="submit" className="w-full mt-6">
+        <Button type="submit" className="w-full mt-6 bg-blue-600 text-gray-50">
           Sign up
         </Button>
       </form>
