@@ -5,3 +5,4 @@
 5. setup next auth
 6. install prisma adapter
 7. session
+8. middleware
