@@ -19,6 +19,7 @@ import OAuthButton from '../OAuthButton';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../ui/use-toast';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   email: z
@@ -32,7 +33,6 @@ const formSchema = z.object({
 });
 
 export default function SignInForm() {
-  const { toast } = useToast();
 
   const router = useRouter();
 
@@ -51,11 +51,7 @@ export default function SignInForm() {
       redirect: false,
     });
     if (signInData?.error) {
-      toast({
-        title: 'Error',
-        description: 'Invalid credentials',
-        variant: 'destructive',
-      });
+      toast.error('Invalid email or password')
     } else {
       router.push('/admin/dashboard');
       router.refresh();

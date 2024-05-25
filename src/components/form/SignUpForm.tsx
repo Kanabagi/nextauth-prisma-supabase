@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../ui/use-toast';
+import { toast } from 'sonner';
 
 const formSchema = z
   .object({
@@ -50,10 +51,9 @@ const formSchema = z
   });
 
 export default function SignUpForm() {
-  const { toast } = useToast();
 
   const router = useRouter();
-
+ 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -77,18 +77,10 @@ export default function SignUpForm() {
     });
 
     if (response.ok) {
-      toast({
-        title: 'Success',
-        description: 'Account created. Please sign in.',
-        variant: 'success',
-      });
+      toast.success('Account created successfully. Please sign in.');
       router.push('/signin');
     } else {
-      toast({
-        title: 'Error',
-        description: 'Something went wrong. Please try again.',
-        variant: 'destructive',
-      });
+      toast.error('Username or Email already exists. Please try again.');
     }
   };
 

@@ -20,7 +20,7 @@ const SideNav = () => {
           const isActive = pathname === navItem.path
 
           return (
-            <>
+            <div className='flex flex-col gap-4 w-full' key={navItem.name}>
               {isOpen ? (
                 <Link href={navItem.path} className={`flex items-center w-full py-4 px-4 rounded-l-full gap-6 text-gray-400 font-semibold ${isActive && '!text-blue-600 bg-[#e9effd]'}`}>
                   <navItem.icon className='w-7 h-7' />
@@ -31,7 +31,7 @@ const SideNav = () => {
                   <navItem.icon className='w-7 h-7' />
                 </Link>
               )}
-            </>
+            </div>
           )
         })}
       </div>

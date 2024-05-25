@@ -2,6 +2,8 @@ import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import * as bcrypt from 'bcrypt';
 import * as z from 'zod';
+import { db } from '@/db';
+import { toast } from 'sonner';
 
 const userSchema = z.object({
   username: z
@@ -26,38 +28,36 @@ const userSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+
+  const body = await req.json();
+
+  const { username, email, password } = userSchema.parse(body);
+
+  // check if email already exists
+  const existingEmail = await db.user.findUnique({
+    where: {
+      email: email
+    }
+  })
+
+  if (existingEmail) {
+    return toast.error('Email already exists');
+  }
+
+  const existingUsername = await db.user.findUnique({
+    where: {
+      username: username
+    }
+  })
+
+  if (existingUsername) {
+    return toast.error('Username already exists');
+  }
+
+  // hash password use bcrypt
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   try {
-    const body = await req.json();
-
-    const { username, email, password } = userSchema.parse(body);
-
-    // check if email already exists
-    const existingUserByEmail = await prisma.user.findUnique({
-      where: { email: email },
-    });
-    if (existingUserByEmail) {
-      return NextResponse.json({
-        status: 409,
-        user: null,
-        message: 'Email already exists',
-      });
-    }
-
-    //check if username already exists
-    const existingUserByUsername = await prisma.user.findUnique({
-      where: { username: username },
-    });
-    if (existingUserByUsername) {
-      return NextResponse.json({
-        status: 409,
-        user: null,
-        message: 'Username already exists',
-      });
-    }
-
-    // hash password use bcrypt
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     // create user
     const newUser = await prisma.user.create({
       data: {

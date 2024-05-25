@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import './globals.css';
-import Navbar from '@/components/Navbar';
-import { Toaster } from '@/components/ui/toaster';
 import Providers from './providers';
-import SideNav from '@/components/SideNav';
+import { Toaster } from '@/components/ui/sonner';
 
 const inter = Poppins({ 
   subsets: ['latin'],

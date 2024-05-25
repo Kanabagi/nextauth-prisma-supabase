@@ -18,7 +18,7 @@ export default async function AdminPage() {
       <SideNav />
 
       <div className='flex-1 flex flex-col p-16 py-10 gap-4'>
-        <NavbarUser />
+        <NavbarUser title='Overview'/>
 
         <DashboardContent />
       </div>
