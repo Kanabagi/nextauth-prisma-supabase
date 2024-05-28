@@ -1,41 +1,43 @@
 "use client"
 
-import React, { useState } from 'react'
+import { editGigolo } from "@/actions/create-gigolo";
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
+    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
-import { useFormState } from 'react-dom'
-import { IoPersonAddSharp } from "react-icons/io5";
-import { createGigolo } from '@/actions/create-gigolo'
 
-const CreateGigolo = () => {
 
-    const [formState, action] = useFormState(createGigolo, {
+import React from 'react'
+import { useFormState } from "react-dom";
+import { RiEditBoxFill } from 'react-icons/ri';
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+
+const EditGigolo = ({ gigoloId, namaPertamaGigolo, namaTerakhirGigolo, umurGigolo }: { gigoloId: number, namaPertamaGigolo: string, namaTerakhirGigolo: string, umurGigolo: string }) => {
+    const [formState, action] = useFormState(editGigolo.bind(null, gigoloId), {
         errors: {}
     })
 
     return (
         <Dialog>
-            <DialogTrigger className='bg-green-500 shadow-sm px-7 h-[50px] text-gray-50 font-bold rounded-full flex items-center gap-4 hover:bg-green-400 transition duration-300 group select-none'>
-                <IoPersonAddSharp className='text-gray-50 w-5 h-5' />
-                Tambah Gigolo
+            <DialogTrigger className="p-2 rounded-full bg-yellow-200">
+                <RiEditBoxFill className="text-yellow-600 w-5 h-5" aria-label="Edit" />
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <form className='flex flex-col gap-10' action={action}>
-                        <h1 className='text-3xl font-bold text-center'>Kanabagi Gigolo</h1>
+                        <h1 className='text-3xl font-bold text-center'>Edit Gigolo</h1>
                         <div className='flex flex-col gap-2'>
                             <div className='flex items-center gap-2 w-full'>
-                                <Input placeholder='First name' name='firstName' className='border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0' />
+                                <Input placeholder='First name' defaultValue={namaPertamaGigolo} name='firstName' className='border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0' />
 
-                                <Input placeholder='Last name' name='lastName' className='border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0' />
+                                <Input placeholder='Last name' defaultValue={namaTerakhirGigolo} name='lastName' className='border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0' />
                             </div>
-                            <Input placeholder='Umur' name='umur' className='border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0' />
+                            <Input placeholder='Umur' name='umur' defaultValue={umurGigolo} className='border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0' />
                             {formState.errors.firstName &&
                                 <p className='text-red-500 text-center'>
                                     {formState.errors.firstName.join(", ")}
@@ -64,8 +66,7 @@ const CreateGigolo = () => {
                 </DialogHeader>
             </DialogContent>
         </Dialog>
-
     )
 }
 
-export default CreateGigolo
+export default EditGigolo

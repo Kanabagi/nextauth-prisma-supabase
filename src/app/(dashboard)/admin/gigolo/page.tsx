@@ -14,9 +14,12 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import SearchGigolo from '@/components/Gigolo/SearchGigolo'
 
 const page = async () => {
     const gigolo = await db.gigolo.findMany()
+
+    const sortedGigoloById = gigolo.sort((a, b) => a.id - b.id)
 
     return (
         <div className='min-h-screen flex bg-[#e9effd]'>
@@ -25,22 +28,26 @@ const page = async () => {
             <div className='flex-1 flex flex-col p-16 py-10 gap-6'>
                 <NavbarUser title='Gigolo' />
                 <div className='flex items-center w-full justify-between'>
-                    <h1 className='font-semibold text-3xl'>Data Gigolo</h1>
+                    <SearchGigolo />
                     <CreateGigolo />
                 </div>
                 <Table>
                     <TableCaption>A list of your recent invoices.</TableCaption>
-                    <TableHeader>
+                    <TableHeader className='bg-gray-100 rounded-[8px] '>
                         <TableRow>
-                            <TableHead className="w-[100px]">No</TableHead>
-                            <TableHead className="w-[250px]">First Name</TableHead>
-                            <TableHead className="w-[250px]">Last Name</TableHead>
-                            <TableHead className="text-right">Umur</TableHead>
+                            <TableHead className="w-[80px] font-semibold">ID</TableHead>
+                            <TableHead className="w-[250px] font-semibold">Nama Lengkap</TableHead>
+                            <TableHead className="w-[150px] font-semibold">Umur</TableHead>
+                            <TableHead className="w-[200px] font-semibold">Created At</TableHead>
+                            <TableHead className="w-[150px] font-semibold">Status</TableHead>
+                            <TableHead className="w-[200px] font-semibold">Updated At</TableHead>
+                            <TableHead className="font-semibold">Tombol Aksi</TableHead>
                         </TableRow>
                     </TableHeader>
-                    {gigolo.map((listGigolo) => {
+                    {sortedGigoloById.map((listGigolo) => {
+                        const namaLengkap = listGigolo.firstName + ' ' + listGigolo.lastName
                         return (
-                            <GigoloContent listGigolo={listGigolo} key={listGigolo.id} />
+                            <GigoloContent listGigolo={listGigolo} key={listGigolo.id} namaLengkap={namaLengkap} />
                         )
                     })}
                 </Table>
