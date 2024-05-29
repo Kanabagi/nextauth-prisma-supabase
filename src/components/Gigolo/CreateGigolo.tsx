@@ -12,6 +12,7 @@ import { Button } from '../ui/button'
 import { useFormState } from 'react-dom'
 import { IoPersonAddSharp } from "react-icons/io5";
 import { createGigolo } from '@/actions/create-gigolo'
+import CreateButtongGigolo from '../common/CreateButtongGigolo'
 
 const CreateGigolo = () => {
 
@@ -31,34 +32,48 @@ const CreateGigolo = () => {
                         <h1 className='text-3xl font-bold text-center'>Kanabagi Gigolo</h1>
                         <div className='flex flex-col gap-2'>
                             <div className='flex items-center gap-2 w-full'>
-                                <Input placeholder='First name' name='firstName' className='border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0' />
+                                <div className='flex flex-col gap-2 w-full'>
+                                    <Input placeholder='First name' name='firstName' className={`border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0 ${formState.errors.firstName && 'border-red-600'}`} />
+                                    {formState.errors.firstName ? (
+                                        <p className='text-red-500 text-[12px]'>
+                                            {formState.errors.firstName.join(", ")}
+                                        </p>
+                                    ) : (
+                                        <p className='text-transparent select-none text-[12px]'>
+                                            Opsional
+                                        </p>
+                                    )}
+                                </div>
 
-                                <Input placeholder='Last name' name='lastName' className='border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0' />
+                                <div className='flex flex-col gap-2 w-full'>
+                                    <Input placeholder='Last name' name='lastName' className={`border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0 ${formState.errors.lastName && 'border-red-600'}`} />
+                                    {formState.errors.lastName ? (
+                                        <p className='text-red-500 text-[12px]'>
+                                            {formState.errors.lastName.join(", ")}
+                                        </p>
+                                    ) : (
+                                        <p className='text-transparent select-none text-[12px]'>
+                                            Opsional
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-                            <Input placeholder='Umur' name='umur' className='border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0' />
-                            {formState.errors.firstName &&
-                                <p className='text-red-500 text-center'>
-                                    {formState.errors.firstName.join(", ")}
-                                </p>
-                            }
-                            {formState.errors.lastName &&
-                                <p className='text-red-500 text-center'>
-                                    {formState.errors.lastName.join(", ")}
-                                </p>
-                            }
+                            <Input placeholder='Umur' name='umur' className={`border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0 ${formState.errors.umur && 'border-red-600'}`} />
+
+
                             {formState.errors.umur &&
-                                <p className='text-red-500 text-center'>
+                                <p className='text-red-500 text-center text-[12px]'>
                                     {formState.errors.umur.join(", ")}
                                 </p>
                             }
 
                             {formState.errors._form &&
-                                <p className='text-red-500 text-center'>
+                                <p className='text-red-500 text-center text-[12px]'>
                                     {formState.errors._form.join(", ")}
                                 </p>
                             }
 
-                            <Button className='bg-blue-600 text-gray-50' type='submit'>Tambah Gigolo</Button>
+                            <CreateButtongGigolo kelasnem='bg-blue-600 text-gray-50 mt-6'>Tambah Gigolo</CreateButtongGigolo>
                         </div>
                     </form>
                 </DialogHeader>

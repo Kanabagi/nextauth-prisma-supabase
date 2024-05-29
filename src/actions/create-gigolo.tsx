@@ -77,6 +77,7 @@ export async function createGigolo(formState: CreateGigoloState, formData: FormD
     }
 
     revalidatePath('/dashboard/admin/gigolo')
+    alert('Gigolo berhasil ditambahkan')
     return {
         errors: {}
     }
@@ -146,5 +147,6 @@ export async function deleteGigolo(id: number) {
         where: { id }
     })
 
+    await new Promise((resolve) => setTimeout(resolve, 1500))
     revalidatePath('/dashboard/admin/gigolo')
 }

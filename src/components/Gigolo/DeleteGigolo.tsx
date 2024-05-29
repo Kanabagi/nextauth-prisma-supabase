@@ -1,7 +1,6 @@
 import React from 'react'
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -12,11 +11,11 @@ import {
 } from "@/components/ui/alert-dialog"
 import { RiDeleteBin6Fill } from 'react-icons/ri'
 import { deleteGigolo } from '@/actions/create-gigolo'
+import FormButtong from '../common/FormButtong'
 
 
 const DeleteGigolo = ({ gigoloId }: { gigoloId: number }) => {
     const handleDelete = deleteGigolo.bind(null, gigoloId)
-
 
     return (
         <AlertDialog>
@@ -33,8 +32,7 @@ const DeleteGigolo = ({ gigoloId }: { gigoloId: number }) => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <form action={handleDelete} className='flex gap-4'>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <button type='submit' className='bg-red-500 px-4 py-2 rounded-[8px] text-gray-50'>Delete</button>
+                        <FormButtong kasihStylePuh='bg-red-600 text-white'>Delete</FormButtong>
                     </form>
                 </AlertDialogFooter>
             </AlertDialogContent>
