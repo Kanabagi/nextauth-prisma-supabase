@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -8,26 +8,43 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from '../ui/input'
-import { Button } from '../ui/button'
 import { useFormState } from 'react-dom'
 import { IoPersonAddSharp } from "react-icons/io5";
 import { createGigolo } from '@/actions/create-gigolo'
 import CreateButtongGigolo from '../common/CreateButtongGigolo'
+import { IoIosClose } from 'react-icons/io'
+import { toast } from 'sonner'
 
 const CreateGigolo = () => {
 
+    const [isOpen, setIsOpen] = useState(false)
+
     const [formState, action] = useFormState(createGigolo, {
-        errors: {}
+        errors: {},
+        submitSuccess: false
     })
 
+    useEffect(() => {
+        if (Object.keys(formState.errors).length === 0 && formState.submitSuccess === true) {
+            setIsOpen(false);
+            toast.success('Gigolo berhasil ditambahkan')
+        }
+    }, [formState.errors]);
+
     return (
-        <Dialog>
-            <DialogTrigger className='bg-green-500 shadow-sm px-7 h-[50px] text-gray-50 font-bold rounded-full flex items-center gap-4 hover:bg-green-400 transition duration-300 group select-none'>
+        <Dialog open={isOpen}>
+            <DialogTrigger
+                className='bg-green-500 shadow-sm px-7 h-[50px] text-gray-50 font-bold rounded-full flex items-center gap-4 hover:bg-green-400 transition duration-300 group select-none'
+                onClick={() => setIsOpen(true)}>
                 <IoPersonAddSharp className='text-gray-50 w-5 h-5' />
                 Tambah Gigolo
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
+                    <IoIosClose
+                        className='absolute right-4 top-4 cursor-pointer w-7 h-7 text-gray-400'
+                        onClick={() => setIsOpen(false)} />
+
                     <form className='flex flex-col gap-10' action={action}>
                         <h1 className='text-3xl font-bold text-center'>Kanabagi Gigolo</h1>
                         <div className='flex flex-col gap-2'>
@@ -73,7 +90,9 @@ const CreateGigolo = () => {
                                 </p>
                             }
 
-                            <CreateButtongGigolo kelasnem='bg-blue-600 text-gray-50 mt-6'>Tambah Gigolo</CreateButtongGigolo>
+                            <CreateButtongGigolo kelasnem='bg-blue-600 text-gray-50 mt-6'>
+                                Tambah Gigolo
+                            </CreateButtongGigolo>
                         </div>
                     </form>
                 </DialogHeader>

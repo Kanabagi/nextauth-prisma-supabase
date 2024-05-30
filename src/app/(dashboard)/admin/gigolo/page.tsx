@@ -2,24 +2,28 @@ import CreateGigolo from '@/components/Gigolo/CreateGigolo'
 import GigoloContent from '@/components/Gigolo/GigoloContent'
 import NavbarUser from '@/components/NavbarUser'
 import SideNav from '@/components/SideNav'
-import { Button } from '@/components/ui/button'
 import { db } from '@/db'
 import React from 'react'
 import {
     Table,
-    TableBody,
     TableCaption,
-    TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import SearchGigolo from '@/components/Gigolo/SearchGigolo'
+import SearchGigolo, { SearchParamProps } from '@/components/Gigolo/SearchGigolo'
 
-const page = async () => {
+const page = async ({searchParams}: SearchParamProps) => {
     const gigolo = await db.gigolo.findMany()
 
-    const sortedGigoloById = gigolo.sort((a, b) => a.id - b.id)
+    const searchQuery = searchParams?.query?.toString() || ''
+
+    const filteredGigolo = gigolo.filter(g => {
+        const fullName = `${g.firstName} ${g.lastName}`.toLowerCase()
+        return fullName.includes(searchQuery.toLowerCase())
+    })
+
+    const sortedGigoloById = filteredGigolo.sort((a, b) => a.id - b.id)
 
     return (
         <div className='min-h-screen flex bg-[#e9effd]'>

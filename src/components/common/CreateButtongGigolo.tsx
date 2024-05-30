@@ -2,6 +2,7 @@ import React from 'react'
 import { useFormStatus } from 'react-dom'
 import { ImSpinner2 } from 'react-icons/im'
 import { Button } from '../ui/button'
+import { CreateGigoloState } from '@/interfaces'
 
 interface CreateGigoloButtong {
     children: React.ReactNode
@@ -9,7 +10,7 @@ interface CreateGigoloButtong {
     kelasnem?: string
 }
 
-const CreateButtongGigolo = ({ children, formData, kelasnem }: CreateGigoloButtong) => {
+const CreateButtongGigolo = ({ children, formData, kelasnem}: CreateGigoloButtong) => {
     const { pending } = useFormStatus()
 
     return (
@@ -17,7 +18,8 @@ const CreateButtongGigolo = ({ children, formData, kelasnem }: CreateGigoloButto
             <Button
                 type='submit'
                 className={`${kelasnem}`}
-                disabled={pending}>
+                disabled={pending}
+            >
                 {pending ? (
                     <ImSpinner2 className='text-gray-300 w-5 h-5 animate-spin' />
                 ) : (

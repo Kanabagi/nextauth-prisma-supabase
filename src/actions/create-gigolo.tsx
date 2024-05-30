@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/db"
-import { CreateGigoloState } from "@/interfaces"
+import { CreateGigoloState, EditGigoloState } from "@/interfaces"
 import { authOptions } from "@/lib/auth"
 import { Gigolo } from "@prisma/client"
 import { getServerSession } from "next-auth"
@@ -9,6 +9,12 @@ import { revalidatePath } from "next/cache"
 import { z } from "zod"
 
 const createGigoloSchema = z.object({
+    firstName: z.string().min(3),
+    lastName: z.string().min(3),
+    umur: z.string().min(1).max(2)
+})
+
+const editGigoloSchema = z.object({
     firstName: z.string().min(3),
     lastName: z.string().min(3),
     umur: z.string().min(1).max(2)
@@ -37,7 +43,8 @@ export async function createGigolo(formState: CreateGigoloState, formData: FormD
 
     if (!correctInput.success) {
         return {
-            errors: correctInput.error.flatten().fieldErrors
+            errors: correctInput.error.flatten().fieldErrors,
+            submitSuccess: false
         }
     }
 
@@ -77,14 +84,14 @@ export async function createGigolo(formState: CreateGigoloState, formData: FormD
     }
 
     revalidatePath('/dashboard/admin/gigolo')
-    alert('Gigolo berhasil ditambahkan')
     return {
-        errors: {}
+        errors: {},
+        submitSuccess: true
     }
 }
 
-export async function editGigolo(id: number, formState: CreateGigoloState, formData: FormData): Promise<CreateGigoloState> {
-    const correctInput = createGigoloSchema.safeParse({
+export async function editGigolo(id: number, formState: EditGigoloState, formData: FormData): Promise<CreateGigoloState> {
+    const correctInput = editGigoloSchema.safeParse({
         firstName: formData.get('firstName'),
         lastName: formData.get('lastName'),
         umur: formData.get('umur')
@@ -100,13 +107,15 @@ export async function editGigolo(id: number, formState: CreateGigoloState, formD
         return {
             errors: {
                 umur: ['Umur sudah ada']
-            }
+            },
+            submitSuccess: false
         }
     }
 
     if (!correctInput.success) {
         return {
-            errors: correctInput.error.flatten().fieldErrors
+            errors: correctInput.error.flatten().fieldErrors,
+            submitSuccess: false
         }
     }
 
@@ -138,7 +147,8 @@ export async function editGigolo(id: number, formState: CreateGigoloState, formD
 
     revalidatePath('/dashboard/admin/gigolo')
     return {
-        errors: {}
+        errors: {},
+        submitSuccess: true
     }
 }
 
@@ -147,6 +157,5 @@ export async function deleteGigolo(id: number) {
         where: { id }
     })
 
-    await new Promise((resolve) => setTimeout(resolve, 1500))
     revalidatePath('/dashboard/admin/gigolo')
 }
