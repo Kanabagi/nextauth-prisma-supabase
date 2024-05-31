@@ -10,7 +10,7 @@ const NavbarUser = ({title}: {title?: string}) => {
     const { data: session } = useSession()
 
     return (
-        <nav className='bg-gray-50 p-2 px-6 rounded-[8px] flex items-center justify-between'>
+        <nav className='bg-gray-50 p-2 px-6 rounded-[8px] flex items-center justify-between w-full'>
             <div className='flex items-center gap-6'>
                 <span className='font-medium text-blue-600 text-xl'>{title}</span>
             </div>

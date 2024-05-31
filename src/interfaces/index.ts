@@ -16,3 +16,8 @@ export interface EditGigoloState {
         _form?: string[]
     }
 }
+
+export type SearchParamProps = {
+    params?: { id: string }
+    searchParams?: { [key: string]: string | string[] | undefined }
+}

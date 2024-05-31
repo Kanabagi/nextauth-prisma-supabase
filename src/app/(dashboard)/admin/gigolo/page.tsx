@@ -3,7 +3,7 @@ import GigoloContent from '@/components/Gigolo/GigoloContent'
 import NavbarUser from '@/components/NavbarUser'
 import SideNav from '@/components/SideNav'
 import { db } from '@/db'
-import React from 'react'
+import React, { Suspense } from 'react'
 import {
     Table,
     TableCaption,
@@ -11,32 +11,67 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import SearchGigolo, { SearchParamProps } from '@/components/Gigolo/SearchGigolo'
+import SearchGigolo from '@/components/Gigolo/SearchGigolo'
+import Pagination from '@/components/Gigolo/Pagination'
+import { SearchParamProps } from '@/interfaces'
 
-const page = async ({searchParams}: SearchParamProps) => {
-    const gigolo = await db.gigolo.findMany()
+const page = async ({ searchParams }: SearchParamProps) => {
+    const pageParam = searchParams?.page?.toString() || '1'
+    const page = parseInt(pageParam, 10) || 1
+    const itemsPerPage = 5
+    const skip = (page - 1) * itemsPerPage
 
-    const searchQuery = searchParams?.query?.toString() || ''
+    const searchQuery = searchParams?.query?.toString().toLowerCase() || ''
 
-    const filteredGigolo = gigolo.filter(g => {
-        const fullName = `${g.firstName} ${g.lastName}`.toLowerCase()
-        return fullName.includes(searchQuery.toLowerCase())
+    const gigolo = await db.gigolo.findMany({
+        where: {
+            OR: [
+                { firstName: { contains: searchQuery, mode: 'insensitive' } },
+                { lastName: { contains: searchQuery, mode: 'insensitive' } },
+                {
+                    AND: [
+                        { firstName: { contains: searchQuery.split(' ')[0], mode: 'insensitive' } },
+                        { lastName: { contains: searchQuery.split(' ')[1], mode: 'insensitive' } }
+                    ]
+                }
+            ]
+        },
+        skip,
+        take: itemsPerPage,
     })
 
-    const sortedGigoloById = filteredGigolo.sort((a, b) => a.id - b.id)
+    const totalGigolo = await db.gigolo.count({
+        where: {
+            OR: [
+                { firstName: { contains: searchQuery, mode: 'insensitive' } },
+                { lastName: { contains: searchQuery, mode: 'insensitive' } },
+                {
+                    AND: [
+                        { firstName: { contains: searchQuery.split(' ')[0], mode: 'insensitive' } },
+                        { lastName: { contains: searchQuery.split(' ')[1], mode: 'insensitive' } }
+                    ]
+                }
+            ]
+        }
+    })
+
+    const totalPages = Math.ceil(totalGigolo / itemsPerPage)
+    const sortedGigoloById = gigolo.sort((a, b) => a.id - b.id)
 
     return (
         <div className='min-h-screen flex bg-[#e9effd]'>
             <SideNav />
 
-            <div className='flex-1 flex flex-col p-16 py-10 gap-6'>
+            <div className='flex-1 flex items-center flex-col p-16 py-10 gap-6'>
                 <NavbarUser title='Gigolo' />
                 <div className='flex items-center w-full justify-between'>
-                    <SearchGigolo />
+                    <Suspense>
+                        <SearchGigolo />
+                    </Suspense>
                     <CreateGigolo />
                 </div>
                 <Table>
-                    <TableCaption>A list of your recent invoices.</TableCaption>
+                    <TableCaption className={`${sortedGigoloById.length === 0 && 'hidden'}`}>A list of your gigolo.</TableCaption>
                     <TableHeader className='bg-gray-100 rounded-[8px] '>
                         <TableRow>
                             <TableHead className="w-[80px] font-semibold">ID</TableHead>
@@ -55,6 +90,14 @@ const page = async ({searchParams}: SearchParamProps) => {
                         )
                     })}
                 </Table>
+
+                {sortedGigoloById.length === 0 ? (
+                    <div className='text-center w-full text-[28px] font-medium text-gray-400 py-20'>Data tidak ditemukan</div>
+                ) : (
+                    <Suspense>
+                        <Pagination page={page} totalPages={totalPages} />
+                    </Suspense>
+                )}
             </div>
         </div>
     )
