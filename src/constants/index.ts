@@ -16,7 +16,7 @@ export const navLinks = [
     },
     {
         name: "Talents",
-        path: '/admin/talents',
+        path: '/admin/talent',
         icon: GiMantaRay
     },
     {
