@@ -17,6 +17,17 @@ export interface EditGigoloState {
     }
 }
 
+export interface CreateTalentState {
+    errors: {
+        name?: string[],
+        umur?: string[],
+        image?: string[],
+        slug?: string[],
+        _form?: string[]
+    },
+    submitSuccess?: boolean
+}
+
 export type SearchParamProps = {
     params?: { id: string }
     searchParams?: { [key: string]: string | string[] | undefined }

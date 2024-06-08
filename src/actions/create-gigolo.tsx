@@ -13,7 +13,7 @@ const createGigoloSchema = z.object({
     lastName: z.string().min(3),
     umur: z.string().min(1).max(2)
 })
-
+ 
 const editGigoloSchema = z.object({
     firstName: z.string().min(3),
     lastName: z.string().min(3),

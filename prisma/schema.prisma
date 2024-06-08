@@ -31,3 +31,14 @@ model Gigolo {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Actress {
+  id        Int    @id @default(autoincrement())
+  namaAktris String
+  imageUrl String
+  umur String
+  topic String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
