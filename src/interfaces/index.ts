@@ -21,8 +21,8 @@ export interface CreateTalentState {
     errors: {
         name?: string[],
         umur?: string[],
-        image?: string[],
-        slug?: string[],
+        imgUrl?: string[],
+        apalah?: string[],
         _form?: string[]
     },
     submitSuccess?: boolean
