@@ -11,9 +11,7 @@ const CardTalents = ({ dataAktris }: { dataAktris: Wanita }) => {
     return (
         <div className='flex flex-col items-center justify-center gap-3 w-full'>
             <div className='flex items-start justify-end flex-col bg-gray-50 w-full max-w-[400px] rounded-[12px] overflow-hidden min-h-[300px] relative group'>
-
-                {}
-                <Image src={dataAktris.imageUrl} alt='' width={800} height={800} className='absolute w-full h-full object-cover group-hover:blur-[1px] transition-all duration-300' loading={'lazy'}/>
+                <Image src={dataAktris.imageUrl} alt='' width={800} height={800} className='absolute w-full h-full object-cover group-hover:scale-110 group-hover:blur-[1px] transition-all duration-500' loading={'lazy'}/>
                 <div className='absolute w-full h-[400px] bg-gradient-to-r from-slate-900' />
 
                 <div className='flex flex-col gap-3 z-20 p-4'>

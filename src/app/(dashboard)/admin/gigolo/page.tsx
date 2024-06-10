@@ -14,7 +14,7 @@ import {
 import SearchGigolo from '@/components/Gigolo/SearchGigolo'
 import Pagination from '@/components/Gigolo/Pagination'
 import { SearchParamProps } from '@/interfaces'
-
+ 
 const page = async ({ searchParams }: SearchParamProps) => {
     const pageParam = searchParams?.page?.toString() || '1'
     const page = parseInt(pageParam, 10) || 1
