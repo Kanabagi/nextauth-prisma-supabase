@@ -13,36 +13,49 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { RiErrorWarningFill } from 'react-icons/ri'
-import { IoIosClose } from 'react-icons/io'
-import { Input } from '../ui/input'
-import CreateButtongGigolo from '../common/CreateButtongGigolo'
-import { IoPersonAddSharp } from 'react-icons/io5'
-import { createTalent } from '@/actions/talent-action'
-import { useFormState } from 'react-dom'
-import { UploadButton, UploadDropzone } from '@/lib/uploadthing'
-import { toast } from 'sonner'
-import { Button } from '../ui/button'
-import { ImSpinner2 } from 'react-icons/im'
-import Image from 'next/image'
+import { IoIosClose } from 'react-icons/io';
+import { Input } from '../ui/input';
+import { RiErrorWarningFill } from 'react-icons/ri';
+import { UploadDropzone } from '@/lib/uploadthing';
+import Image from 'next/image';
+import { Button } from '../ui/button';
+import { ImSpinner2 } from 'react-icons/im';
+import { useFormState } from 'react-dom';
+import { toast } from 'sonner';
+import { AiFillEdit } from 'react-icons/ai';
+import { editTalent } from '@/actions/talent-action';
 
-const CreateTalent = () => {
+type DataAktrisProps = {
+    talentId: number;
+    talentName: string;
+    talentUmur: string;
+    talentDesc: string;
+    talentApalah: string;
+    talentImage: string;
+}
+
+const EditTalent = ({ talentId, talentName, talentUmur, talentDesc, talentApalah, talentImage }: DataAktrisProps) => {
     const [isOpen, setIsOpen] = useState(false)
     const [imageUrl, setImageUrl] = useState('')
     const [loading, setIsLoading] = useState(false)
 
-    const [formState, action] = useFormState(createTalent, {
+    const [formState, action] = useFormState(editTalent.bind(null, talentId), {
         errors: {},
         submitSuccess: false
-    });
+    })
 
-    const handleSumit = async (e: any) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        formData.append('imageUrl', imageUrl);
+    const handleSubmit = async (e:any) => {
+        e.preventDefault()
+        const formData = new FormData(e.target)
 
-        await action(formData);
-        setIsLoading(true);
+        if (imageUrl.length > 0) {
+            formData.append('imageUrl', imageUrl)
+        } else {
+            formData.append('imageUrl', talentImage)
+        }
+
+        await action(formData)
+        setIsLoading(true)
     }
 
     useEffect(() => {
@@ -55,10 +68,9 @@ const CreateTalent = () => {
     return (
         <Dialog open={isOpen}>
             <DialogTrigger
-                className='bg-green-500 shadow-sm px-7 h-[50px] text-gray-50 font-bold rounded-full flex items-center gap-4 hover:bg-green-400 transition duration-300 group select-none'
+                className='p-2 bg-yellow-200 rounded-[8px] select-none'
                 onClick={() => setIsOpen(true)}>
-                <IoPersonAddSharp className='text-gray-50 w-5 h-5' />
-                Tambah Talent
+                <AiFillEdit className='w-6 h-6 text-yellow-700' />
             </DialogTrigger>
             <DialogContent className="w-full max-w-[650px]">
                 <IoIosClose
@@ -66,12 +78,12 @@ const CreateTalent = () => {
                     onClick={() => setIsOpen(false)} />
 
                 <DialogHeader>
-                    <form className='flex flex-col gap-10' onSubmit={handleSumit}>
+                    <form className='flex flex-col gap-10' onSubmit={handleSubmit}>
                         <h1 className='text-3xl font-bold text-center'>Create Gigolo</h1>
                         <div className='flex flex-col gap-3'>
                             <div className='flex items-center gap-3'>
                                 <div className="relative w-full">
-                                    <Input placeholder='Name' name='namaAktris' className={`border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0`} />
+                                    <Input placeholder='Name' name='namaAktris' defaultValue={talentName} className={`border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0`} />
                                     <TooltipProvider>
                                         <Tooltip>
                                             {formState.errors.name && (
@@ -87,7 +99,7 @@ const CreateTalent = () => {
 
                                 </div>
                                 <div className="relative">
-                                    <Input placeholder='Umur' name='umur' className={`border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0`} />
+                                    <Input placeholder='Umur' name='umur' defaultValue={talentUmur} className={`border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0`} />
 
                                     <TooltipProvider>
                                         <Tooltip>
@@ -126,16 +138,20 @@ const CreateTalent = () => {
                                     }}
                                     className="bg-slate-800 ut-label:text-lg ut-allowed-content:ut-uploading:text-red-300 w-full h-full mb-2"
                                 />
-                                {imageUrl && (
+                                {imageUrl ? (
                                     <div className='relative w-full h-full'>
                                         <Image src={imageUrl} alt='' height={300} width={300} className='absolute w-full h-full object-cover top-0 right-0 rounded-[12px]' />
+                                    </div>
+                                ) : (
+                                    <div className='relative w-full h-full'>
+                                        <Image src={talentImage} alt='' height={300} width={300} className='absolute w-full h-full object-cover top-0 right-0 rounded-[12px]' />
                                     </div>
                                 )}
 
                             </div>
                             <div className='flex items-center gap-3'>
                                 <div className="relative w-full">
-                                    <Input placeholder='Deskripsi' name='desc' className={`border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0`} />
+                                    <Input placeholder='Deskripsi' name='desc' defaultValue={talentDesc} className={`border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0`} />
 
                                     <TooltipProvider>
                                         <Tooltip>
@@ -151,7 +167,7 @@ const CreateTalent = () => {
                                     </TooltipProvider>
                                 </div>
                                 <div className="relative">
-                                    <Input placeholder='Slug' name='apalah' className={`border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0`} />
+                                    <Input placeholder='Slug' name='apalah' defaultValue={talentApalah} className={`border-gray-400 h-[50px] focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-0`} />
 
                                     <TooltipProvider>
                                         <Tooltip>
@@ -169,7 +185,7 @@ const CreateTalent = () => {
                             </div>
 
                             <Button type='submit' className="bg-blue-600 text-gray-50" disabled={loading}>
-                                {loading ? <ImSpinner2 className='text-gray-300 w-5 h-5 animate-spin' /> : 'Create Talent'}
+                                {loading ? <ImSpinner2 className='text-gray-300 w-5 h-5 animate-spin' /> : 'Edit Talent'}
                             </Button>
                         </div>
                     </form>
@@ -179,4 +195,4 @@ const CreateTalent = () => {
     )
 }
 
-export default CreateTalent
+export default EditTalent

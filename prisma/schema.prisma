@@ -37,6 +37,7 @@ model Wanita {
   namaAktris String
   imageUrl String
   umur String
+  desc String
   apalah String
 
   createdAt DateTime @default(now())

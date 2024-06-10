@@ -22,6 +22,7 @@ export interface CreateTalentState {
         name?: string[],
         umur?: string[],
         imgUrl?: string[],
+        desc?: string[],
         apalah?: string[],
         _form?: string[]
     },

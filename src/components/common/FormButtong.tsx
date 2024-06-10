@@ -21,7 +21,7 @@ const FormButtong = ({ children, formData, kasihStylePuh }: FormButtonProps) => 
                 className={`${kasihStylePuh} ${pending ? 'cursor-not-allowed px-6' : 'cursor-pointer'} px-[18px] rounded-[8px]`}
                 disabled={pending}
                 onClick={() => {
-                    toast.success('Gigolo has been deleted')
+                    toast.success('Data has been deleted')
                 }}
             >
                 {pending ? (
